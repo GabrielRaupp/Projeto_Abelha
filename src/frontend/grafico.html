@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.css">
+    <title>Gráficos de Telemetria</title>
+    <script src="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.js"></script> 
+</head>
+<body>
+    <header>
+        <h1>Gráficos de Telemetria</h1>
+    </header>
+    <div style="text-align: center; margin-top: 10px;">
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+            <span id="theme-icon">🌞</span>
+        </button>
+    </div>
+    <main class="graphs-area">
+        <!-- Ambiente Section -->
+        <section class="graph-container" aria-labelledby="ambiente-title">
+            <h2 id="ambiente-title">Ambiente</h2>
+            <div class="graph-item">
+                <div id="graficoAmbienteTemp" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Temperatura do Ambiente"></div>
+                <p>Temperatura (°C)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoAmbienteUmid" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Umidade do Ambiente"></div>
+                <p>Umidade (%)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoAmbientePressao" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Pressão do Ambiente"></div>
+                <p>Pressão (hPa)</p>
+            </div>
+        </section>
+
+        <!-- Caixa 9 Section -->
+        <section class="graph-container" aria-labelledby="caixa9-title">
+            <h2 id="caixa9-title">Caixa 9</h2>
+            <div class="graph-item">
+                <div id="graficoCaixa9Temp" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Temperatura da Caixa 9"></div>
+                <p>Temperatura (°C)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoCaixa9Umid" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Umidade da Caixa 9"></div>
+                <p>Umidade (%)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoCaixa9Pressao" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Pressão da Caixa 9"></div>
+                <p>Pressão (hPa)</p>
+            </div>
+        </section>
+
+        <!-- Caixa 10 Section -->
+        <section class="graph-container" aria-labelledby="caixa10-title">
+            <h2 id="caixa10-title">Caixa 10</h2>
+            <div class="graph-item">
+                <div id="graficoCaixa10Temp" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Temperatura da Caixa 10"></div>
+                <p>Temperatura (°C)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoCaixa10Umid" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Umidade da Caixa 10"></div>
+                <p>Umidade (%)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoCaixa10Pressao" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Pressão da Caixa 10"></div>
+                <p>Pressão (hPa)</p>
+            </div>
+        </section>
+
+        <!-- Caixa 12 Section -->
+        <section class="graph-container" aria-labelledby="caixa12-title">
+            <h2 id="caixa12-title">Caixa 12</h2>
+            <div class="graph-item">
+                <div id="graficoCaixa12Temp" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Temperatura da Caixa 12"></div>
+                <p>Temperatura (°C)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoCaixa12Umid" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Umidade da Caixa 12"></div>
+                <p>Umidade (%)</p>
+            </div>
+            <div class="graph-item">
+                <div id="graficoCaixa12Pressao" class="ct-chart" style="height: 200px;" aria-label="Gráfico de Pressão da Caixa 12"></div>
+                <p>Pressão (hPa)</p>
+            </div>
+        </section>
+
+        <!-- Back Button -->
+        <div class="button-container">
+            <button onclick="window.location.href='Index.html'" aria-label="Voltar para a página inicial">Voltar</button>
+        </div>
+    </main>
+
+    <script src="Script.js"></script>
+    <!-- Script para alternar tema -->
+    <script>
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+
+            // Atualizar o ícone do botão de tema
+            const themeIcon = document.getElementById("theme-icon");
+            themeIcon.textContent = newTheme === "dark" ? "🌙" : "🌞";
+        }
+
+        // Carregar tema salvo do localStorage
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+            document.getElementById("theme-icon").textContent = savedTheme === "dark" ? "🌙" : "🌞";
+        });
+    </script>
+</body>
+</html>

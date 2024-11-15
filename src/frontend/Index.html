@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Projeto Abelha</title>
+</head>
+<body>
+    <header>
+        <h1>Estudo das Abelhas Nativas de SC</h1>
+    </header>
+
+    <!-- Botão de alternância de tema com ícone de sol e lua -->
+    <div style="text-align: center; margin-top: 10px;">
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+            <span id="theme-icon">🌞</span>
+        </button>
+    </div>
+
+    <main class="main-area">
+        <!-- Seções de conteúdo sobre as abelhas nativas -->
+        <section class="card">
+            <p>
+                O estado de Santa Catarina, localizado na região sul do Brasil, é conhecido por sua rica biodiversidade...
+            </p>
+        </section>
+        <section class="card">
+            <p>
+                Um estudo recente focado nas abelhas nativas de Santa Catarina visa identificar e catalogar as espécies 
+                presentes na região, suas interações com as plantas nativas e cultivadas, e suas contribuições para a 
+                polinização. Entre as espécies mais comuns, destacam-se as abelhas do gênero Melipona, conhecidas como 
+                abelhas sem ferrão, que são altamente valorizadas por suas características sociais e por produzir mel de 
+                alta qualidade.
+            </p>
+        </section>
+        <section class="card">
+            <h2>Importância das Abelhas Nativas</h2>
+            <p>
+                As abelhas nativas não apenas polinizam flores, mas também contribuem para a manutenção da biodiversidade. 
+                Elas ajudam a garantir a produção de frutas, vegetais e outras culturas, essenciais para a segurança alimentar. 
+                A preservação das abelhas é vital, pois sua extinção pode levar a consequências devastadoras para o meio ambiente 
+                e para a agricultura.
+            </p>
+        </section>
+
+        <!-- Botão para visualização de gráficos -->
+        <div class="button-card">
+            <button onclick="window.location.href='grafico.html'">Ver Gráficos</button>
+        </div>
+    </main>
+
+    <!-- Rodapé com logos e mapa -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo-container">
+                <img class="footer-logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN6BlCttJCRr604iJug669sdbUBs5ZB7t1yw&s" alt="Logo IFC Sombrio">
+                <img class="footer-logo" src="https://cecom.ifc.edu.br/wp-content/uploads/sites/10/2022/11/Logo_IFC_vertical_SantaRosadoSul.png" alt="Logo IFC Santa Rosa" >
+                <img class="logo-footer" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMK4iK61cmJmfmeERXk1otySxyFs2HERnh9w&s" alt="Logo IFC Santa Rosa">
+            </div>
+            <div class="map-container">
+                <div class="campus-map">
+                    <h3>IFC Sombrio</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3486.128905764229!2d-49.64116902370722!3d-29.101875488212173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9522163f89863cb7%3A0xc17d2dd5de33a10f!2sInstituto%20Federal%20Catarinense%20-%20Campus%20Sombrio!5e0!3m2!1spt-BR!2sbr!4v1731456934349!5m2!1spt-BR!2sbr" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div class="campus-map">
+                    <h3>IFC Santa Rosa do Sul</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3486.326352775326!2d-49.81694792370757!3d-29.096045087949648!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9522166b4090f559%3A0xb824e9b86c91bea2!2sInstituto%20Federal%20Catarinense%2C%20Campus%20Santa%20Rosa%20do%20Sul!5e0!3m2!1spt-BR!2sbr!4v1731456888337!5m2!1spt-BR!2sbr" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+        <p class="footer-text">Instituto Federal Catarinense - Campus Sombrio & Campus Santa Rosa © 2024</p>
+    </footer>
+    
+    
+
+    <!-- Script para alternar tema -->
+    <script>
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+
+            // Atualizar o ícone do botão de tema
+            const themeIcon = document.getElementById("theme-icon");
+            themeIcon.textContent = newTheme === "dark" ? "🌙" : "🌞";
+        }
+
+        // Carregar tema salvo do localStorage
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+            document.getElementById("theme-icon").textContent = savedTheme === "dark" ? "🌙" : "🌞";
+        });
+    </script>
+</body>
+</html>

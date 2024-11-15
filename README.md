@@ -1,4 +1,4 @@
-Projeto Telemetria - Sistema de Monitoramento
+Projeto Abelha - Sistema de Monitoramento
 Este projeto tem como objetivo coletar e visualizar dados de telemetria de sensores para monitoramento de ambiente e caixas, como temperatura, umidade e pressão. Através de uma interface web, os dados podem ser filtrados por data e exibidos em gráficos interativos.
 
 Tecnologias Utilizadas

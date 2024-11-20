@@ -1,4 +1,3 @@
-
 // Função para criar o tooltip
 function createTooltip() {
     const tooltip = document.createElement('div');
@@ -85,12 +84,6 @@ function drawLineChart(containerId, title, seriesData, unit) {
     chartElement.addEventListener('mouseleave', () => {
         tooltip.style.display = 'none';
     });
-
-    // Remover o botão de download, pois não será mais necessário
-    const existingButton = chartElement.parentNode.querySelector('.download-button');
-    if (existingButton) {
-        existingButton.remove();
-    }
 }
 
 // Função para desenhar gráficos para todos os sensores
@@ -99,15 +92,12 @@ function drawChartsForAllSensors(getDataBySensorId) {
         { container: '#graficoAmbienteTemp', title: 'Temperatura', sensor: '7', key: 'temperatura', unit: '°C' },
         { container: '#graficoAmbienteUmid', title: 'Umidade', sensor: '7', key: 'umidade', unit: '%' },
         { container: '#graficoAmbientePressao', title: 'Pressão', sensor: '7', key: 'pressao', unit: 'hPa' },
-
         { container: '#graficoCaixa9Temp', title: 'Temperatura', sensor: '4', key: 'temperatura', unit: '°C' },
         { container: '#graficoCaixa9Umid', title: 'Umidade', sensor: '4', key: 'umidade', unit: '%' },
         { container: '#graficoCaixa9Pressao', title: 'Pressão', sensor: '4', key: 'pressao', unit: 'hPa' },
-
         { container: '#graficoCaixa10Temp', title: 'Temperatura', sensor: '5', key: 'temperatura', unit: '°C' },
         { container: '#graficoCaixa10Umid', title: 'Umidade', sensor: '5', key: 'umidade', unit: '%' },
         { container: '#graficoCaixa10Pressao', title: 'Pressão', sensor: '5', key: 'pressao', unit: 'hPa' },
-
         { container: '#graficoCaixa12Temp', title: 'Temperatura', sensor: '6', key: 'temperatura', unit: '°C' },
         { container: '#graficoCaixa12Umid', title: 'Umidade', sensor: '6', key: 'umidade', unit: '%' },
         { container: '#graficoCaixa12Pressao', title: 'Pressão', sensor: '6', key: 'pressao', unit: 'hPa' },
@@ -119,7 +109,7 @@ function drawChartsForAllSensors(getDataBySensorId) {
     });
 }
 
-// Função para buscar e carregar os dados do dia atual
+// Função para buscar e filtrar dados
 async function fetchData() {
     try {
         const response = await fetch('/api/telemetria');
@@ -127,10 +117,11 @@ async function fetchData() {
 
         const data = await response.json();
 
-        // Filtrando os dados para o dia atual
-        const today = new Date().toISOString().split('T')[0];
-        const startOfDay = new Date(`${today}T00:00:00Z`);
-        const endOfDay = new Date(`${today}T23:59:59Z`);
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(startOfDay);
+        endOfDay.setHours(23, 59, 59, 999);
 
         const filteredData = data.filter(item => {
             const date = new Date(item.data);
@@ -154,9 +145,8 @@ async function fetchData() {
 
 // Configuração inicial
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar gráficos com os dados do dia atual
-    fetchData();
+    const updateData = () => fetchData();
 
-    // Atualização automática a cada 5 minutos
-    setInterval(fetchData, 300000);
+    updateData();
+    setInterval(updateData, 15000); // Atualiza os dados a cada 15 segundos
 });

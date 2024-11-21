@@ -118,27 +118,32 @@ async function fetchData() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
+        console.log('Dados recebidos:', data);
 
-        const now = new Date();
-        const offset = -3 * 60 * 60 * 1000; // UTC-3
-        const startOfDay = new Date(now.getTime() + offset);
+        const startOfDay = new Date();
         startOfDay.setHours(0, 0, 0, 0);
-
         const endOfDay = new Date(startOfDay);
         endOfDay.setHours(23, 59, 59, 999);
+
+        console.log('Intervalo de filtro:', startOfDay, endOfDay);
 
         const filteredData = data.filter(item => {
             const date = new Date(item.data);
             return date >= startOfDay && date <= endOfDay;
         });
 
+        console.log('Dados filtrados:', filteredData);
+
         const getDataBySensorId = (sensorId, key) => filteredData
             .filter(item => item.sensor_id === sensorId)
-            .map(item => ({
-                x: new Date(item.data).getTime() / 1000,
-                y: item[key],
-                time: `${new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} ${item.horario}`
-            }));
+            .map(item => {
+                console.log('Item processado:', item);
+                return {
+                    x: new Date(item.data).getTime() / 1000,
+                    y: item[key],
+                    time: `${new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} ${item.horario}`
+                };
+            });
 
         drawChartsForAllSensors(getDataBySensorId);
     } catch (error) {

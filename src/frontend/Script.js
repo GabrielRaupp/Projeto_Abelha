@@ -88,18 +88,26 @@ function drawLineChart(containerId, title, seriesData, unit) {
     });
 }
 
-// Função para desenhar gráficos para todos os sensores
+// Função para desenhar gráficos  sensores
 function drawChartsForAllSensors(getDataBySensorId) {
     const sensorMappings = [
+        
+        //Ambiente
         { container: '#graficoAmbienteTemp', title: 'Temperatura', sensor: '7', key: 'temperatura', unit: '°C' },
         { container: '#graficoAmbienteUmid', title: 'Umidade', sensor: '7', key: 'umidade', unit: '%' },
         { container: '#graficoAmbientePressao', title: 'Pressão', sensor: '7', key: 'pressao', unit: 'hPa' },
+
+        //Caixa 9 
         { container: '#graficoCaixa9Temp', title: 'Temperatura', sensor: '4', key: 'temperatura', unit: '°C' },
         { container: '#graficoCaixa9Umid', title: 'Umidade', sensor: '4', key: 'umidade', unit: '%' },
         { container: '#graficoCaixa9Pressao', title: 'Pressão', sensor: '4', key: 'pressao', unit: 'hPa' },
+
+        //Caixa 10
         { container: '#graficoCaixa10Temp', title: 'Temperatura', sensor: '5', key: 'temperatura', unit: '°C' },
         { container: '#graficoCaixa10Umid', title: 'Umidade', sensor: '5', key: 'umidade', unit: '%' },
         { container: '#graficoCaixa10Pressao', title: 'Pressão', sensor: '5', key: 'pressao', unit: 'hPa' },
+
+        //Caixa 12
         { container: '#graficoCaixa12Temp', title: 'Temperatura', sensor: '6', key: 'temperatura', unit: '°C' },
         { container: '#graficoCaixa12Umid', title: 'Umidade', sensor: '6', key: 'umidade', unit: '%' },
         { container: '#graficoCaixa12Pressao', title: 'Pressão', sensor: '6', key: 'pressao', unit: 'hPa' },
@@ -120,10 +128,10 @@ async function fetchData() {
         const data = await response.json();
 
         const startOfDay = new Date();
-        startOfDay.setUTCHours(3, 0, 0, 0); // Ajusta para início do dia no horário de Brasília (UTC-3)
+        startOfDay.setUTCHours(3, 0, 0, 0);
 
         const endOfDay = new Date(startOfDay);
-        endOfDay.setUTCHours(26, 59, 59, 999); // Fim do dia no horário de Brasília
+        endOfDay.setUTCHours(26, 59, 59, 999); 
 
         const filteredData = data.filter(item => {
             const date = new Date(item.data);
@@ -149,6 +157,7 @@ async function fetchData() {
 document.addEventListener('DOMContentLoaded', () => {
     const updateData = () => fetchData();
 
+//Atualiza a cada 3 minutos
     updateData();
-    setInterval(updateData, 15000); // Atualiza os dados a cada 15 segundos
+    setInterval(updateData, 180000); 
 });

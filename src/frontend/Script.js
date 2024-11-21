@@ -46,7 +46,9 @@ function drawLineChart(containerId, title, seriesData, unit) {
         return;
     }
 
-    const labels = seriesData.map(point => new Date(point.x * 1000).toLocaleDateString('pt-BR'));
+    const labels = seriesData.map(point =>
+        new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo' }).format(new Date(point.x * 1000))
+    );
     const values = seriesData.map(point => point.y);
 
     const chart = new Chartist.Line(containerId, {
@@ -118,10 +120,10 @@ async function fetchData() {
         const data = await response.json();
 
         const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
+        startOfDay.setUTCHours(3, 0, 0, 0); // Ajusta para início do dia no horário de Brasília (UTC-3)
 
         const endOfDay = new Date(startOfDay);
-        endOfDay.setHours(23, 59, 59, 999);
+        endOfDay.setUTCHours(26, 59, 59, 999); // Fim do dia no horário de Brasília
 
         const filteredData = data.filter(item => {
             const date = new Date(item.data);
@@ -133,7 +135,7 @@ async function fetchData() {
             .map(item => ({
                 x: new Date(item.data).getTime() / 1000,
                 y: item[key],
-                time: `${new Date(item.data).toLocaleDateString('pt-BR')} ${item.horario}`
+                time: `${new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} ${item.horario}`
             }));
 
         drawChartsForAllSensors(getDataBySensorId);

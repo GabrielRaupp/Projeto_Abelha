@@ -88,7 +88,7 @@ function drawLineChart(containerId, title, seriesData, unit) {
     });
 }
 
-// Função para desenhar gráficos sensores
+// Função para desenhar gráficos para todos os sensores
 function drawChartsForAllSensors(getDataBySensorId) {
     const sensorMappings = [
         { container: '#graficoAmbienteTemp', title: 'Temperatura', sensor: '7', key: 'temperatura', unit: '°C' },
@@ -118,32 +118,25 @@ async function fetchData() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
-        console.log('Dados recebidos:', data);
 
         const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date(startOfDay);
-        endOfDay.setHours(23, 59, 59, 999);
+        startOfDay.setUTCHours(3, 0, 0, 0); // Ajusta para início do dia no horário de Brasília (UTC-3)
 
-        console.log('Intervalo de filtro:', startOfDay, endOfDay);
+        const endOfDay = new Date(startOfDay);
+        endOfDay.setUTCHours(26, 59, 59, 999); // Fim do dia no horário de Brasília
 
         const filteredData = data.filter(item => {
             const date = new Date(item.data);
             return date >= startOfDay && date <= endOfDay;
         });
 
-        console.log('Dados filtrados:', filteredData);
-
         const getDataBySensorId = (sensorId, key) => filteredData
             .filter(item => item.sensor_id === sensorId)
-            .map(item => {
-                console.log('Item processado:', item);
-                return {
-                    x: new Date(item.data).getTime() / 1000,
-                    y: item[key],
-                    time: `${new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} ${item.horario}`
-                };
-            });
+            .map(item => ({
+                x: new Date(item.data).getTime() / 1000,
+                y: item[key],
+                time: `${new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} ${item.horario}`
+            }));
 
         drawChartsForAllSensors(getDataBySensorId);
     } catch (error) {
@@ -155,6 +148,7 @@ async function fetchData() {
 // Configuração inicial
 document.addEventListener('DOMContentLoaded', () => {
     const updateData = () => fetchData();
+
     updateData();
-    setInterval(updateData, 180000); // Atualiza a cada 3 minutos
+    setInterval(updateData, 300000); // Atualiza os dados a cada 5 minutos
 });

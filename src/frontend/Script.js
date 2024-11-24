@@ -56,12 +56,16 @@ function drawLineChart(containerId, title, seriesData, unit) {
         return;
     }
 
-    const labels = seriesData.map(point => new Date(point.x * 1000).toLocaleDateString('pt-BR'));
+    const labels = seriesData.map(point =>
+        new Date(point.x * 1000).toLocaleString('pt-BR', {
+            timeZone: 'America/Sao_Paulo',
+        }).split(' ')[0]
+    );
     const values = seriesData.map(point => point.y);
 
     const chart = new Chartist.Line(containerId, {
         labels: labels,
-        series: [values]
+        series: [values],
     }, {
         high: Math.max(...values) + 5,
         low: Math.min(...values) - 5,
@@ -103,8 +107,8 @@ async function fetchData() {
 
         const data = await response.json();
         const today = new Date();
-        const startOfDay = new Date(today.toISOString().split('T')[0] + 'T00:00:00Z');
-        const endOfDay = new Date(today.toISOString().split('T')[0] + 'T23:59:59Z');
+        const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
 
         const filteredData = data.filter(item => {
             const date = new Date(item.data);
@@ -116,7 +120,7 @@ async function fetchData() {
             .map(item => ({
                 x: new Date(item.data).getTime() / 1000,
                 y: item[key],
-                time: `${new Date(item.data).toLocaleDateString('pt-BR')} ${item.horario}`,
+                time: `${new Date(item.data).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`,
             }));
 
         drawChartsForAllSensors(getDataBySensorId);

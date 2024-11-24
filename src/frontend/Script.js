@@ -1,58 +1,49 @@
+
 // Função para criar o tooltip
 function createTooltip() {
     const tooltip = document.createElement('div');
     tooltip.className = 'tooltip';
-    Object.assign(tooltip.style, {
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'none',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        color: 'white',
-        padding: '5px',
-        borderRadius: '4px',
-        zIndex: '1000',
-    });
+    tooltip.style.position = 'absolute';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.style.display = 'none';
+    tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    tooltip.style.color = 'white';
+    tooltip.style.padding = '5px';
+    tooltip.style.borderRadius = '4px';
+    tooltip.style.zIndex = '1000';
     document.body.appendChild(tooltip);
     return tooltip;
 }
 
 // Função para exibir o último valor
 function displayLastValue(containerId, values, unit) {
-    if (!values || values.length === 0) return;
-
     const lastValue = values[values.length - 1];
-    const container = document.querySelector(containerId)?.parentNode;
-
-    if (!container) return;
-
-    let valueDisplay = container.querySelector('.last-value');
-    if (!valueDisplay) {
-        valueDisplay = document.createElement('p');
-        valueDisplay.className = 'last-value';
-        container.appendChild(valueDisplay);
+    const valueDisplay = document.querySelector(`${containerId} + p`);
+    if (valueDisplay) {
+        valueDisplay.innerText = `Último Valor: ${lastValue} ${unit}`;
+        valueDisplay.classList.add('last-value');
+    } else {
+        const newValueDisplay = document.createElement('p');
+        newValueDisplay.innerText = `Último Valor: ${lastValue} ${unit}`;
+        newValueDisplay.className = 'last-value';
+        document.querySelector(containerId).parentNode.appendChild(newValueDisplay);
     }
-    valueDisplay.innerText = `Último Valor: ${lastValue} ${unit}`;
 }
 
 // Função para exibir o título
 function displayTitle(containerId, title) {
-    const container = document.querySelector(containerId)?.parentNode;
-    if (!container) return;
-
+    const container = document.querySelector(containerId).parentNode;
     if (!container.querySelector('h3')) {
         const titleElement = document.createElement('h3');
         titleElement.innerText = title;
-        container.insertBefore(titleElement, container.firstChild);
+        container.insertBefore(titleElement, document.querySelector(containerId));
     }
 }
 
-// Função para desenhar o gráfico
+// Função para desenhar o gráfico de linha com tooltip
 function drawLineChart(containerId, title, seriesData, unit) {
-    const container = document.querySelector(containerId);
-    if (!container) return;
-
-    if (!seriesData || seriesData.length === 0) {
-        container.innerHTML = `<p>Sem dados para exibir.</p>`;
+    if (seriesData.length === 0) {
+        document.querySelector(containerId).innerHTML = `<p>Sem dados para exibir.</p>`;
         return;
     }
 
@@ -67,8 +58,11 @@ function drawLineChart(containerId, title, seriesData, unit) {
         low: Math.min(...values) - 5,
         showArea: true,
         fullWidth: true,
-        axisY: { labelInterpolationFnc: value => `${value} ${unit}` },
-        axisX: { showLabel: false, showGrid: false },
+        axisY: {
+            labelInterpolationFnc: value => `${value} ${unit}`,
+            labelClass: 'y-axis-label'
+        },
+        axisX: { showLabel: false, showGrid: false }
     });
 
     displayLastValue(containerId, values, unit);
@@ -82,47 +76,20 @@ function drawLineChart(containerId, title, seriesData, unit) {
         if (pointIndex >= 0 && pointIndex < seriesData.length) {
             const point = seriesData[pointIndex];
             tooltip.innerText = `Valor: ${point.y} ${unit}\nData: ${point.time}`;
-            Object.assign(tooltip.style, {
-                left: `${event.pageX + 10}px`,
-                top: `${event.pageY + 10}px`,
-                display: 'block',
-            });
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+            tooltip.style.display = 'block';
         }
     });
 
     chartElement.addEventListener('mouseleave', () => {
         tooltip.style.display = 'none';
     });
-}
 
-// Função para buscar e filtrar dados do dia atual
-async function fetchData() {
-    try {
-        const response = await fetch('/api/telemetria');
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-        const data = await response.json();
-        const today = new Date();
-        const startOfDay = new Date(today.toISOString().split('T')[0] + 'T00:00:00Z');
-        const endOfDay = new Date(today.toISOString().split('T')[0] + 'T23:59:59Z');
-
-        const filteredData = data.filter(item => {
-            const date = new Date(item.data);
-            return date >= startOfDay && date <= endOfDay;
-        });
-
-        const getDataBySensorId = (sensorId, key) => filteredData
-            .filter(item => item.sensor_id === sensorId)
-            .map(item => ({
-                x: new Date(item.data).getTime() / 1000,
-                y: item[key],
-                time: `${new Date(item.data).toLocaleDateString('pt-BR')} ${item.horario}`,
-            }));
-
-        drawChartsForAllSensors(getDataBySensorId);
-    } catch (error) {
-        console.error('Erro ao carregar os dados:', error);
-        document.querySelector('.graphs-area').innerHTML = `<p>Erro ao carregar os dados: ${error.message}</p>`;
+    // Remover o botão de download, pois não será mais necessário
+    const existingButton = chartElement.parentNode.querySelector('.download-button');
+    if (existingButton) {
+        existingButton.remove();
     }
 }
 
@@ -152,7 +119,44 @@ function drawChartsForAllSensors(getDataBySensorId) {
     });
 }
 
+// Função para buscar e carregar os dados do dia atual
+async function fetchData() {
+    try {
+        const response = await fetch('/api/telemetria');
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const data = await response.json();
+
+        // Filtrando os dados para o dia atual
+        const today = new Date().toISOString().split('T')[0];
+        const startOfDay = new Date(`${today}T00:00:00Z`);
+        const endOfDay = new Date(`${today}T23:59:59Z`);
+
+        const filteredData = data.filter(item => {
+            const date = new Date(item.data);
+            return date >= startOfDay && date <= endOfDay;
+        });
+
+        const getDataBySensorId = (sensorId, key) => filteredData
+            .filter(item => item.sensor_id === sensorId)
+            .map(item => ({
+                x: new Date(item.data).getTime() / 1000,
+                y: item[key],
+                time: `${new Date(item.data).toLocaleDateString('pt-BR')} ${item.horario}`
+            }));
+
+        drawChartsForAllSensors(getDataBySensorId);
+    } catch (error) {
+        console.error('Erro ao carregar os dados:', error);
+        document.querySelector('.graphs-area').innerHTML = `<p>Erro ao carregar os dados: ${error.message}</p>`;
+    }
+}
+
 // Configuração inicial
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar gráficos com os dados do dia atual
     fetchData();
+
+    // Atualização automática a cada 5 minutos
+    setInterval(fetchData, 300000);
 });

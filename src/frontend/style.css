@@ -2,7 +2,7 @@
 :root {
     --bg-color: #f0f2f5;
     --text-color: #333;
-    --text-color-dark: #ffffff;
+    --text-color-dark: #ffffff; /* Adicionando uma variável para o modo escuro */
     --primary-color: #3b82f6;
     --secondary-color: #1d4ed8;
     --card-bg: #ffffff;
@@ -14,7 +14,7 @@
 [data-theme="dark"] {
     --bg-color: #1f2937;
     --text-color: #f3f4f6;
-    --text-color-dark: #ffffff;
+    --text-color-dark: #ffffff; /* Usando a variável de cor de texto escura */
     --primary-color: #60a5fa;
     --secondary-color: #3b82f6;
     --card-bg: #374151;
@@ -67,11 +67,10 @@ h1 {
 
 /* Títulos e Subtítulos */
 h2 {
-    font-size: 2rem;
+    font-size: 1.6rem;
     color: var(--primary-color);
     margin-bottom: 1rem;
-    font-weight: 800;
-    align-items: center;
+    font-weight: 600;
 }
 
 p {
@@ -92,14 +91,13 @@ p {
     padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease;
     margin-bottom: 1.5rem;
     text-align: left;
 }
 
 .card:hover {
     transform: scale(1.02);
-    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 /* Botões com efeito de cor e leve animação */
@@ -112,7 +110,7 @@ button, .button-card button {
     font-weight: bold;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+    transition: background 0.3s ease, transform 0.2s;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 
@@ -122,31 +120,36 @@ button:hover, .button-card button:hover {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* Botão de alternância de tema com ícone */
+.theme-toggle-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color 0.3s;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
 /* Gráficos com borda e sombras */
 .graph-container {
     background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
     transition: box-shadow 0.3s ease;
 }
 
-.graph-container:hover {
-    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
-}
-
 .graph-item .ct-chart {
-    background: #ffffff;
+    background: #f9fafb;
     border-radius: 12px;
     width: 100%;
-    height: 350px;
+    height: 300px;
     box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s ease;
-}
-
-.graph-item .ct-chart:hover {
-    background: #f4f7fc;
 }
 
 /* Tooltip estilizado */
@@ -234,21 +237,24 @@ button:hover, .button-card button:hover {
     gap: 15px;
 }
 
+
 .footer-logo {
-    width: 70px;
+    width: 70px; 
     height: auto;
     transition: transform 0.3s ease;
     padding-bottom: 10%; 
 }
-
 .logo-footer {
     width: 190px; 
     transition: transform 0.3s ease;
     padding-bottom: 10%; 
+
 }
 
-.logo-footer:hover {
+.logo-footer:hover
+{
     transform: scale(1.1);
+
 }
 
 .footer-logo:hover {
@@ -274,6 +280,8 @@ button:hover, .button-card button:hover {
     color: var(--footer-text-color);
 }
 
+
+
 /* Responsividade */
 @media (max-width: 768px) {
     h1 {
@@ -286,7 +294,5 @@ button:hover, .button-card button:hover {
         flex-direction: column;
         align-items: center;
     }
-    .graph-item .ct-chart {
-        height: 250px;
-    }
+ 
 }
